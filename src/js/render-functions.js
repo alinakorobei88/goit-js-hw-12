@@ -3,6 +3,12 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
+const lightbox = new SimpleLightbox('.gallery a', {
+    captions: true,
+    captionsData: 'alt',
+    captionsDelay: 250
+});
+
 export function showImages(images) {
     const gallery = document.querySelector('.gallery');
     const markup = images.map(image => 
@@ -25,11 +31,7 @@ export function showImages(images) {
         </a>`).join('');
             
     gallery.insertAdjacentHTML('beforeend', markup);
-        const lightbox = new SimpleLightbox('.gallery a', {
-            captions: true,
-            captionsData: 'alt',
-            captionsDelay: 250
-        });
+    
         lightbox.refresh();
     }
     
