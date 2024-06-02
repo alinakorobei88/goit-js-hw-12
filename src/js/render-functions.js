@@ -5,7 +5,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 export function showImages(images) {
     const gallery = document.querySelector('.gallery');
-    gallery.innerHTML = images.map(image => 
+    const markup = images.map(image => 
         `<a href="${image.largeImageURL}" class="gallery_item">
         <image src="${image.webformatURL}" alt="${image.tags}" class="gallery_image" />
         <div class="gallery_info">
