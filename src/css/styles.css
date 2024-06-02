@@ -5,8 +5,6 @@
   |============================
 */
 @import url('./reset.css');
-@import url('./vite-promo.css');
-@import url('./header.css');
 
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
@@ -22,4 +20,126 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+.div-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid black;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 5s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 30px 120px;
+  justify-content: center;
+}
+
+.gallery_item {
+  width: calc((100% - 48px) / 3);
+  box-sizing: border-box;
+  height: auto;
+  border: 1px solid #808080;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gallery_image {
+  display: block;
+  width: 100%;
+  height: 152px; /* 200px (total height) - 48px (info height) */
+  object-fit: cover;
+}
+
+.gallery_info {
+  width: 100%;
+  height: 48px;
+  padding: 5px;
+  background: #fff;
+  color: #2E2F42;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: 14px;
+}
+
+.info_labels, .info_values {
+  display: flex;
+  justify-content: space-around;
+}
+
+.info_labels p, .info_values p {
+  margin: 0;
+  width: 25%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.info_labels {
+  font-weight: bold;
+}
+
+button {
+ 
+  width: 91px;
+  padding: 8px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: #4e75ff;
+  border: none;
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.5; 
+  letter-spacing: 0.04em;
+}
+
+input {
+  width: 272px;
+  height: 30px;
+  border-radius: 8px;
+  background-color: #fff;
+  padding-left: 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #808080;
+  color: #2e2f42;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5; 
+  letter-spacing: 0.04em;
 }
