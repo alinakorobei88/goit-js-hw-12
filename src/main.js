@@ -6,7 +6,7 @@ let query = '';
 
 document.querySelector('.search-form').addEventListener('submit', async(event) => {
     event.preventDefault();
-    const query = event.target.elements.search_query.value.trim();
+    query = event.target.elements.search_query.value.trim();
     page = 1;
 
     if (query === '') {
