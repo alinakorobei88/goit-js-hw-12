@@ -15,5 +15,8 @@ export  async function fetchImages(query, page = 1) {
             page: page,
         },
     });
-    return response.data.hits;
+    return {
+        hits: response.data.hits,
+        totalHits: response.data.totalHits,
+    };
 }

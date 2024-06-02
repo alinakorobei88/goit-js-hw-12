@@ -3,8 +3,10 @@ import { showImages, showMessage, showLoader, hideLoader } from './js/render-fun
 
 let page = 1;
 let query = '';
+let totalHits = 0;
+const perPage = 15;
 
-document.querySelector('.search-form').addEventListener('submit', async(event) => {
+document.querySelector('.search-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     query = event.target.elements.search_query.value.trim();
     page = 1;
@@ -14,50 +16,52 @@ document.querySelector('.search-form').addEventListener('submit', async(event) =
         return;
     }
 
-        // Очищення форми та галереї
-        document.querySelector('.gallery').innerHTML = '';
-        event.target.reset();
+    // Очищення форми та галереї
+    document.querySelector('.gallery').innerHTML = '';
+    event.target.reset();
 
     showLoader();
 
     try {
-        const images = await fetchImages(query, page);
+        const { hits, totalHits: total } = await fetchImages(query, page);
         hideLoader();
-        if (images.length === 0) {
+        totalHits = total;
+        if (hits.length === 0) {
             showMessage('Sorry, there are no images matching your search query. Please try again!');
         } else {
-            showImages(images);
+            showImages(hits);
             document.querySelector('.load-more').classList.remove('hidden');
+            if (totalHits <= perPage) {
+                document.querySelector('.load-more').classList.add('hidden');
+                showMessage("We're sorry, but you've reached the end of search results.");
+            }
+        }
+    } catch (error) {
+        hideLoader();
+        showMessage('An error occurred while fetching images. Please try again later.');
+        console.error('Error fetching images:', error);
     }
-}
-catch(error) {
-    hideLoader();
-    showMessage('An error occurred while fetching images. Please try again later.');
-    console.error('Error fetching images:', error);
-}
 });
 
-document.querySelector('.load-more').addEventListener('click', async() => {
+document.querySelector('.load-more').addEventListener('click', async () => {
     page++;
     showLoader();
 
     try {
-        const images = await fetchImages(query, page);
+        const { hits } = await fetchImages(query, page);
         hideLoader();
-        if(images.length === 0){
+        if (hits.length === 0 || page * perPage >= totalHits) {
             showMessage("We're sorry, but you've reached the end of search results.");
             document.querySelector('.load-more').classList.add('hidden');
-        }
-        else{
-            showImages(images);
+        } else {
+            showImages(hits);
             smoothScroll();
         }
-        }
-        catch(error) {
-            hideLoader();
-            showMessage('An error occurred while fetching images. Please try again later.');
-            console.error('Error fetching images:', error);
-        }
+    } catch (error) {
+        hideLoader();
+        showMessage('An error occurred while fetching images. Please try again later.');
+        console.error('Error fetching images:', error);
+    }
 });
 
 function smoothScroll() {
