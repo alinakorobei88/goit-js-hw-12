@@ -5,19 +5,21 @@ let page = 1;
 let query = '';
 let totalHits = 0;
 const perPage = 15;
+let allResultsLoaded = false;
 
 document.querySelector('.search-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     query = event.target.elements.search_query.value.trim();
     page = 1;
 
-    if (query === '') {
-        showMessage('Please enter a search query.');
+    if (!query) {
+        showMessage('Please enter a search query');
         return;
     }
 
     // Очищення форми та галереї
     document.querySelector('.gallery').innerHTML = '';
+    document.querySelector('.load-more').classList.add('hidden');
     event.target.reset();
 
     showLoader();
@@ -30,20 +32,20 @@ document.querySelector('.search-form').addEventListener('submit', async (event) 
             showMessage('Sorry, there are no images matching your search query. Please try again!');
         } else {
             showImages(hits);
-            document.querySelector('.load-more').classList.remove('hidden');
-            if (totalHits <= perPage) {
-                document.querySelector('.load-more').classList.add('hidden');
-                showMessage("We're sorry, but you've reached the end of search results.");
+            
+            if (totalHits > perPage) {
+                document.querySelector('.load-more').classList.remove('hidden');
             }
         }
     } catch (error) {
-        hideLoader();
         showMessage('An error occurred while fetching images. Please try again later.');
         console.error('Error fetching images:', error);
-    }
+    } 
 });
 
 document.querySelector('.load-more').addEventListener('click', async () => {
+    if (allResultsLoaded) return;
+
     page++;
     showLoader();
 
@@ -52,6 +54,7 @@ document.querySelector('.load-more').addEventListener('click', async () => {
         hideLoader();
         if (hits.length === 0 || page * perPage >= totalHits) {
             showMessage("We're sorry, but you've reached the end of search results.");
+            allResultsLoaded = true;
             document.querySelector('.load-more').classList.add('hidden');
         } else {
             showImages(hits);
@@ -63,6 +66,7 @@ document.querySelector('.load-more').addEventListener('click', async () => {
         console.error('Error fetching images:', error);
     }
 });
+document.querySelector('.load-more').classList.add('hidden');
 
 function smoothScroll() {
     const { height: cardHeight } = document.querySelector('.gallery').firstElementChild.getBoundingClientRect();
