@@ -6,6 +6,7 @@ let query = '';
 let totalHits = 0;
 const perPage = 15;
 let allResultsLoaded = false;
+const loadMoreBtn = document.querySelector('.load-more');
 
 document.querySelector('.search-form').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -19,7 +20,7 @@ document.querySelector('.search-form').addEventListener('submit', async (event) 
 
     // Очищення форми та галереї
     document.querySelector('.gallery').innerHTML = '';
-    document.querySelector('.load-more').classList.add('hidden');
+    loadMoreBtn.classList.add('hidden');
     event.target.reset();
 
     showLoader();
@@ -34,7 +35,7 @@ document.querySelector('.search-form').addEventListener('submit', async (event) 
             showImages(hits);
             
             if (totalHits > perPage) {
-                document.querySelector('.load-more').classList.remove('hidden');
+                loadMoreBtn.classList.remove('hidden');
             }
         }
     } catch (error) {
@@ -43,7 +44,7 @@ document.querySelector('.search-form').addEventListener('submit', async (event) 
     } 
 });
 
-document.querySelector('.load-more').addEventListener('click', async () => {
+loadMoreBtn.addEventListener('click', async () => {
     if (allResultsLoaded) return;
 
     page++;
@@ -52,21 +53,20 @@ document.querySelector('.load-more').addEventListener('click', async () => {
     try {
         const { hits } = await fetchImages(query, page);
         hideLoader();
-        if (hits.length === 0 || page * perPage >= totalHits) {
+        showImages(hits);
+        smoothScroll();
+        if (Math.ceil(totalHits / perPage) === page) {
             showMessage("We're sorry, but you've reached the end of search results.");
             allResultsLoaded = true;
-            document.querySelector('.load-more').classList.add('hidden');
-        } else {
-            showImages(hits);
-            smoothScroll();
-        }
+            loadMoreBtn.classList.add('hidden');
+        } 
     } catch (error) {
         hideLoader();
         showMessage('An error occurred while fetching images. Please try again later.');
         console.error('Error fetching images:', error);
     }
 });
-document.querySelector('.load-more').classList.add('hidden');
+loadMoreBtn.classList.add('hidden');
 
 function smoothScroll() {
     const { height: cardHeight } = document.querySelector('.gallery').firstElementChild.getBoundingClientRect();
